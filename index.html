@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepTerra — Transform Existing Fibre Into AI-Powered Infrastructure Monitoring</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-deep: #0A0E17;
+    --navy-black: #050810;
+    --cyan: #05BCFF;
+    --ice: #8FD9FF;
+    --alert: #E8493A;
+    --white: #F2F5F8;
+    --grey: #7C8798;
+    --line: rgba(242, 245, 248, 0.08);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy-deep);
+    color: var(--white);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+
+  img, video { max-width: 100%; display: block; }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- NAV ---------- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10, 14, 23, 0.75);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--cyan); }
+  .nav-links { display: flex; gap: 32px; font-size: 14px; color: var(--grey); }
+  .nav-links a { transition: color 0.2s; }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 9px 18px;
+    border: 1px solid var(--cyan);
+    border-radius: 3px;
+    color: var(--cyan);
+    transition: all 0.2s;
+  }
+  .nav-cta:hover { background: var(--cyan); color: var(--navy-black); }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.55;
+  }
+  .hero-fade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(5,8,16,0.3) 0%, rgba(5,8,16,0.55) 55%, var(--navy-deep) 100%);
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 780px;
+    padding: 140px 32px 100px;
+  }
+  .hero h1 {
+    font-size: clamp(38px, 6vw, 64px);
+    line-height: 1.08;
+    margin: 20px 0 24px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--cyan);
+  }
+  .hero p {
+    font-size: 18px;
+    color: var(--grey);
+    max-width: 520px;
+    margin-bottom: 36px;
+  }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    padding: 14px 26px;
+    background: var(--cyan);
+    color: var(--navy-black);
+    border-radius: 3px;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(5,188,255,0.3); }
+  .btn-secondary {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    padding: 14px 26px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    color: var(--white);
+    transition: border-color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--white); }
+
+  /* ---------- SECTION SHELL ---------- */
+  section { padding: 120px 0; position: relative; }
+  .section-dark { background: var(--navy-black); }
+  .section-head { max-width: 640px; margin-bottom: 64px; }
+  .section-head h2 { font-size: clamp(28px, 4vw, 40px); margin-top: 16px; line-height: 1.15; }
+  .section-head p { color: var(--grey); font-size: 16px; margin-top: 16px; }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  /* ---------- PROBLEM ---------- */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .problem-list { display: flex; flex-direction: column; gap: 28px; }
+  .problem-item {
+    display: flex;
+    gap: 18px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .problem-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .problem-mark {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--alert);
+    flex-shrink: 0;
+    padding-top: 4px;
+  }
+  .problem-item h3 { font-size: 18px; margin-bottom: 6px; }
+  .problem-item p { color: var(--grey); font-size: 15px; }
+  .stat-card {
+    background: linear-gradient(155deg, rgba(232,73,58,0.1), rgba(10,14,23,0.4));
+    border: 1px solid rgba(232,73,58,0.25);
+    border-radius: 8px;
+    padding: 44px 36px;
+  }
+  .stat-num {
+    font-family: var(--font-mono);
+    font-size: clamp(40px, 5vw, 56px);
+    color: var(--alert);
+    line-height: 1;
+  }
+  .stat-label { color: var(--grey); font-size: 14px; margin-top: 12px; }
+
+  /* ---------- SOLUTION VISUAL BAND ---------- */
+  .visual-band {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    margin-bottom: 64px;
+  }
+  .visual-band video { width: 100%; display: block; }
+  .visual-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--navy-black);
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--grey);
+  }
+  .visual-caption .dot { color: var(--cyan); }
+
+  /* ---------- PIPELINE ---------- */
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 56px;
+  }
+  .pipeline-step {
+    background: var(--navy-deep);
+    padding: 32px 24px;
+    position: relative;
+  }
+  .pipeline-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--cyan);
+  }
+  .pipeline-step h3 { font-size: 18px; margin: 14px 0 8px; }
+  .pipeline-step p { font-size: 14px; color: var(--grey); }
+
+  /* ---------- FEATURE GRID ---------- */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .feature {
+    background: var(--navy-black);
+    padding: 32px 28px;
+    transition: background 0.25s;
+  }
+  .feature:hover { background: #0D1220; }
+  .feature h3 { font-size: 16px; margin-bottom: 8px; }
+  .feature p { font-size: 14px; color: var(--grey); }
+
+  /* ---------- PRODUCT SPLIT ---------- */
+  .product-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .product-media {
+    position: relative;
+    min-height: 420px;
+    background: var(--navy-black);
+  }
+  .product-media img, .product-media video {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .product-text {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--navy-black);
+  }
+  .product-text .eyebrow { margin-bottom: 16px; }
+  .product-text h3 { font-size: 26px; margin-bottom: 14px; }
+  .product-text p { color: var(--grey); font-size: 15px; }
+
+  /* ---------- MOAT ---------- */
+  .moat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .moat-item .moat-index {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--cyan);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .moat-item h3 { font-size: 17px; margin-bottom: 10px; }
+  .moat-item p { font-size: 14px; color: var(--grey); }
+
+  /* ---------- MARKET ---------- */
+  .market-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .market-stats { display: flex; flex-direction: column; gap: 32px; }
+  .market-stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .market-stat-row:last-child { border: none; padding-bottom: 0; }
+  .market-stat-label { font-size: 14px; color: var(--grey); }
+  .market-stat-value { font-family: var(--font-mono); font-size: 26px; color: var(--white); }
+  .market-media {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+
+  /* ---------- CTA ---------- */
+  .cta-section {
+    position: relative;
+    text-align: center;
+    padding: 140px 0;
+    overflow: hidden;
+  }
+  .cta-video {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.35;
+  }
+  .cta-fade {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(5,8,16,0.2) 0%, var(--navy-black) 80%);
+  }
+  .cta-inner { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; }
+  .cta-inner h2 { font-size: clamp(30px, 5vw, 46px); margin: 20px 0 16px; }
+  .cta-inner p { color: var(--grey); font-size: 16px; margin-bottom: 36px; }
+  .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 48px 0;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-links { display: flex; gap: 28px; font-size: 13px; color: var(--grey); }
+  .footer-copy { font-family: var(--font-mono); font-size: 12px; color: var(--grey); }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 860px) {
+    .nav-links { display: none; }
+    .problem-grid, .market-grid { grid-template-columns: 1fr; }
+    .pipeline { grid-template-columns: 1fr 1fr; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .product-split { grid-template-columns: 1fr; }
+    .moat-grid { grid-template-columns: 1fr 1fr; }
+    .product-media { min-height: 260px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">Deep<span>Terra</span></div>
+    <div class="nav-links">
+      <a href="#problem">Problem</a>
+      <a href="#solution">Solution</a>
+      <a href="#how">How it works</a>
+      <a href="#moat">Why us</a>
+      <a href="#market">Market</a>
+    </div>
+    <a href="#cta" class="nav-cta">Get in touch</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <video class="hero-video" autoplay muted loop playsinline preload="auto">
+    <source src="assets/fibre-sensing.mp4" type="video/mp4">
+  </video>
+  <div class="hero-fade"></div>
+  <div class="hero-content">
+    <span class="eyebrow">Distributed Acoustic Sensing · AI-Powered</span>
+    <h1>Your fibre is already listening. <em>We taught it to talk back.</em></h1>
+    <p>DeepTerra turns existing telecom fibre-optic cable into a real-time, AI-powered monitoring network — no new sensors, no new infrastructure, deployed in days.</p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary">Talk to us</a>
+      <a href="#solution" class="btn-secondary">See how it works</a>
+    </div>
+  </div>
+</header>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">The problem</span>
+      <h2>Critical infrastructure is still managed like it's 1995.</h2>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-list reveal">
+        <div class="problem-item">
+          <span class="problem-mark">01</span>
+          <div>
+            <h3>Reactive monitoring, zero warning</h3>
+            <p>Operators find out after damage, theft, or failure has already happened — there's no continuous way to catch it early.</p>
+          </div>
+        </div>
+        <div class="problem-item">
+          <span class="problem-mark">02</span>
+          <div>
+            <h3>Expensive, non-scalable coverage</h3>
+            <p>CCTV and discrete sensors require constant power and network infrastructure — too costly to run across hundreds of kilometres of buried assets.</p>
+          </div>
+        </div>
+        <div class="problem-item">
+          <span class="problem-mark">03</span>
+          <div>
+            <h3>A problem with a price tag</h3>
+            <p>Telekom Malaysia alone loses an estimated RM50 million a year to cable theft — damage discovered only after service is already disrupted.</p>
+          </div>
+        </div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num">$1.5M</div>
+        <div class="stat-label">Estimated operational value lost globally, every minute, to undetected infrastructure incidents.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution" class="section-dark">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">The solution</span>
+      <h2>What if your existing infrastructure could warn you?</h2>
+      <p>Your fibre cables are already the perfect sensors. DeepTerra just needs to listen to them — and learn their language.</p>
+    </div>
+
+    <div class="visual-band reveal">
+      <video class="lazy-video" muted loop playsinline preload="none"
+        poster="assets/sea-network-map.jpg"
+        data-src="assets/pulse-network-gis.mp4">
+      </video>
+      <div class="visual-caption">
+        <span><span class="dot">●</span> Live network view</span>
+        <span>DTAS + DeepDAS — real-time fibre monitoring across the network</span>
+      </div>
+    </div>
+
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <span class="pipeline-num">01 / LISTEN</span>
+        <h3>Sense the signal</h3>
+        <p>DTAS turns a single fibre into thousands of virtual sensors along its length.</p>
+      </div>
+      <div class="pipeline-step">
+        <span class="pipeline-num">02 / UNDERSTAND</span>
+        <h3>Classify the event</h3>
+        <p>DeepDAS applies AI trained on proprietary field data to identify what's happening.</p>
+      </div>
+      <div class="pipeline-step">
+        <span class="pipeline-num">03 / ACT</span>
+        <h3>Alert instantly</h3>
+        <p>Real-time alerts reach your team — or trigger drone/robotic inspection automatically.</p>
+      </div>
+      <div class="pipeline-step">
+        <span class="pipeline-num">04 / LEARN</span>
+        <h3>Improve continuously</h3>
+        <p>Every event refines the model, sharpening detection accuracy over time.</p>
+      </div>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <h3>Perimeter intrusion</h3>
+        <p>Detect unauthorized access along the entire fibre route, in real time.</p>
+      </div>
+      <div class="feature">
+        <h3>Theft & illegal activity</h3>
+        <p>Catch cable tampering and digging before damage is done.</p>
+      </div>
+      <div class="feature">
+        <h3>Ground anomaly detection</h3>
+        <p>Identify subsurface shifts and structural risk early.</p>
+      </div>
+      <div class="feature">
+        <h3>Water leakage detection</h3>
+        <p>Spot leaks along pipeline-adjacent fibre routes before they escalate.</p>
+      </div>
+      <div class="feature">
+        <h3>Structural health monitoring</h3>
+        <p>Continuous vibration analysis for bridges, rail, and buried assets.</p>
+      </div>
+      <div class="feature">
+        <h3>Sensor-free, no maintenance</h3>
+        <p>No batteries, no discrete hardware in the field — the fibre is the sensor.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW / PRODUCT -->
+<section id="how">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Full-stack, end to end</span>
+      <h2>Two products. One intelligent guardian.</h2>
+    </div>
+
+    <div class="product-split reveal" style="margin-bottom: 32px;">
+      <div class="product-media">
+        <img src="assets/dtas-hardware.jpg" alt="DTAS hardware unit" loading="lazy">
+      </div>
+      <div class="product-text">
+        <span class="eyebrow">DTAS</span>
+        <h3>High-performance sensing hardware</h3>
+        <p>A compact, plug-and-play distributed acoustic sensing system. In-house developed processing architecture keeps CAPEX down without compromising signal fidelity.</p>
+      </div>
+    </div>
+
+    <div class="product-split reveal">
+      <div class="product-text">
+        <span class="eyebrow">DeepDAS</span>
+        <h3>Software-defined intelligence</h3>
+        <p>Application-specific detection and classification, trained on proprietary field-noise data — engineered for Southeast Asian monsoon conditions where off-the-shelf DAS systems struggle.</p>
+      </div>
+      <div class="product-media">
+        <img src="assets/fibre-macro.jpg" alt="Fibre optic signal detail, macro view" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MOAT -->
+<section id="moat" class="section-dark">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Why DeepTerra wins</span>
+      <h2>Built for conditions off-the-shelf DAS can't handle.</h2>
+    </div>
+    <div class="moat-grid reveal">
+      <div class="moat-item">
+        <span class="moat-index">01</span>
+        <h3>Cost-effective hardware</h3>
+        <p>In-house processing architecture, customized for the requirement — significantly lower CAPEX than legacy DAS vendors.</p>
+      </div>
+      <div class="moat-item">
+        <span class="moat-index">02</span>
+        <h3>A real data moat</h3>
+        <p>Proprietary noise data collected specifically in Southeast Asian monsoon conditions — rain, humidity, external vibration.</p>
+      </div>
+      <div class="moat-item">
+        <span class="moat-index">03</span>
+        <h3>Next-gen software layer</h3>
+        <p>Denoising and event classification trained on real field conditions, with LLM/agentic reasoning built in.</p>
+      </div>
+      <div class="moat-item">
+        <span class="moat-index">04</span>
+        <h3>A local engineering team</h3>
+        <p>Optoelectronic scientists, engineers, and AI/ML experts on the ground — DAS deployment isn't plug-and-forget.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section id="market">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Huge market, one wedge first</span>
+      <h2>Starting where the pain is sharpest.</h2>
+    </div>
+    <div class="market-grid">
+      <div class="market-stats reveal">
+        <div class="market-stat-row">
+          <span class="market-stat-label">Global TAM</span>
+          <span class="market-stat-value">$6.5B <span style="font-size:14px;color:var(--grey);">· 12.9% CAGR</span></span>
+        </div>
+        <div class="market-stat-row">
+          <span class="market-stat-label">APAC SAM</span>
+          <span class="market-stat-value">$190–280M</span>
+        </div>
+        <div class="market-stat-row">
+          <span class="market-stat-label">Year 1 focus</span>
+          <span class="market-stat-value">$60M <span style="font-size:14px;color:var(--grey);">· Asia telecom</span></span>
+        </div>
+      </div>
+      <div class="market-media reveal">
+        <img src="assets/sea-network-map.jpg" alt="Southeast Asia sensor network map" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="cta-section">
+  <video class="cta-video lazy-video" muted loop playsinline preload="none"
+    data-src="assets/pulse-network-gis.mp4">
+  </video>
+  <div class="cta-fade"></div>
+  <div class="cta-inner reveal">
+    <span class="eyebrow">The future of infrastructure</span>
+    <h2>Real-time. Autonomous. Predictive.</h2>
+    <p>We're working with telecom and O&amp;G operators piloting DeepTerra today. Let's talk about what's underneath your network.</p>
+    <div class="cta-actions">
+      <a href="mailto:hello@deepterra.ai" class="btn-primary">hello@deepterra.ai</a>
+      <a href="tel:+60149002831" class="btn-secondary">+60 14 900 2831</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="logo" style="font-size:16px;">Deep<span>Terra</span></div>
+    <div class="footer-links">
+      <a href="#problem">Problem</a>
+      <a href="#solution">Solution</a>
+      <a href="#market">Market</a>
+    </div>
+    <div class="footer-copy">© 2026 DeepTerra. www.deepterra.ai</div>
+  </div>
+</footer>
+
+<script>
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Lazy-load below-the-fold videos: only fetch + play once scrolled near view.
+  const videoObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const video = entry.target;
+      if (entry.isIntersecting && !video.src) {
+        video.src = video.dataset.src;
+        video.load();
+        video.play().catch(() => {});
+        videoObserver.unobserve(video);
+      }
+    });
+  }, { rootMargin: '200px 0px' });
+  document.querySelectorAll('.lazy-video').forEach(el => videoObserver.observe(el));
+</script>
+
+</body>
+</html>
